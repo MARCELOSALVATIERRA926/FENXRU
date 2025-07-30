@@ -1,0 +1,56 @@
+#!/bin/bash
+
+clear
+echo -e "\e[1;32m── INSTALADOR FENIX-VPS ──\e[0m"
+echo -e "\e[1;34mActualizando sistema y preparando entorno...\e[0m"
+
+apt update -y && apt upgrade -y
+apt install -y curl bc unzip lsof figlet netcat jq net-tools nmap screen cron netpipes python python3 wget
+
+# Crear carpeta del sistema
+dir="/etc/FENIX-VPS"
+if [[ -d ${dir} ]]; then
+  rm -rf ${dir}
+fi
+mkdir -p ${dir}
+
+# Descargar archivo module
+echo -e "\e[1;34mDescargando módulo principal...\e[0m"
+wget -q -O ${dir}/module "https://raw.githubusercontent.com/MARCELOSALVATIERRA926/FENXRU/main/module/module"
+chmod +x ${dir}/module
+
+# Descargar scripts del sistema
+echo -e "\e[1;34mDescargando scripts del sistema FENIX-VPS...\e[0m"
+base_url="https://raw.githubusercontent.com/MARCELOSALVATIERRA926/FENXRU/main/old"
+archivos=("gerar.sh" "menu" "menu.sh" "banner" "lista-arq")
+
+for archivo in "${archivos[@]}"; do
+  wget -q -O "${dir}/${archivo}" "${base_url}/${archivo}"
+  chmod +x "${dir}/${archivo}"
+done
+
+# Crear accesos globales
+echo -e "\e[1;34mCreando accesos rápidos globales...\e[0m"
+
+# Aquí defines qué comando quieres usar para cada script
+declare -A comandos=(
+  ["fenix-gerar"]="gerar.sh"
+  ["fenix-menu"]="menu.sh"
+  ["fenix-banner"]="banner"
+  ["fenix-lista"]="lista-arq"
+  ["fenix-module"]="module"
+)
+
+for cmd in "${!comandos[@]}"; do
+  target="${dir}/${comandos[$cmd]}"
+  link="/usr/bin/${cmd}"
+
+  if [[ -L $link ]]; then
+    rm -f "$link"
+  fi
+
+  ln -s "$target" "$link"
+  chmod +x "$target"
+done
+
+echo -e "\e[1;32mInstalación completada. Usa los comandos fenix-gerar, fenix-menu, fenix-banner, fenix-lista o fenix-module para ejecutar.\e[0m"
