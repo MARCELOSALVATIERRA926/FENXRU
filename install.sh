@@ -2,7 +2,7 @@
 
 module="$(pwd)/module"
 rm -rf ${module}
-wget -O ${module} "https://raw.githubusercontent.com/rudi9999/Herramientas/main/module/module" &>/dev/null
+wget -O ${module} "https://raw.githubusercontent.com/MARCELOSALVATIERRA926/FENXRU/main/module/module" &>/dev/null
 [[ ! -e ${module} ]] && exit
 chmod +x ${module} &>/dev/null
 source ${module}
@@ -28,12 +28,10 @@ ADM_inst="${ADMRufu}/install" && [[ ! -d ${ADM_inst} ]] && mkdir ${ADM_inst}
 tmp="${ADMRufu}/tmp" && [[ ! -d ${tmp} ]] && mkdir ${tmp}
 SCPinstal="$HOME/install"
 
-#rm -rf /etc/localtime &>/dev/null
-#ln -s /usr/share/zoneinfo/America/Argentina/Tucuman /etc/localtime &>/dev/null
 cp -f $0 ${ADMRufu}/install.sh
 rm $(pwd)/$0 &> /dev/null
 if [[ $(which install-LIC) = "" ]]; then
-  wget -O /usr/bin/install-LIC 'https://github.com/rudi9999/Rufu-LIC/raw/main/install-LIC'; chmod +x /usr/bin/install-LIC &>/dev/null
+  wget -O /usr/bin/install-LIC 'https://raw.githubusercontent.com/MARCELOSALVATIERRA926/FENXRU/main/install-LIC'; chmod +x /usr/bin/install-LIC &>/dev/null
 fi
 install-LIC
 [[ $? = 1 ]] && exit
@@ -63,7 +61,7 @@ fixDeb12Ubu24(){
   	_glibc=$(ldd --version|head -1|grep -o '[0-9]\+\.[0-9]\+'|sed 's/\.//g'|head -1)
   
   	if [[ -n $_glibc && $_glibc -ge 235 ]]; then
-  		wget -O /root/fix https://github.com/rudi9999/ADMRufu/raw/refs/heads/main/fix && chmod 755 /root/fix && /root/fix
+  		wget -O /root/fix https://raw.githubusercontent.com/MARCELOSALVATIERRA926/FENXRU/main/fix && chmod 755 /root/fix && /root/fix
   	else
   	    echo "Glibc es inferior a 2.35 o no se pudo determinar la versión."
   	    echo "Por lo que no se puede aplicar el fix debian12/ubuntu24"
@@ -72,7 +70,7 @@ fixDeb12Ubu24(){
 }
 
 repo_install(){
-  link="https://raw.githubusercontent.com/rudi9999/ADMRufu/main/Repositorios/$VERSION_ID.list"
+  link="https://raw.githubusercontent.com/MARCELOSALVATIERRA926/FENXRU/main/Repositorios/$VERSION_ID.list"
   case $VERSION_ID in
     8*|9*|10*|11*|16.04*|18.04*|20.04*|20.10*|21.04*|21.10*|22.04*) [[ ! -e /etc/apt/sources.list.back ]] && cp /etc/apt/sources.list /etc/apt/sources.list.back
                                                                     wget -O /etc/apt/sources.list ${link} &>/dev/null;;
@@ -136,9 +134,8 @@ verificar_arq(){
 
 error_fun(){
   msg -bar3
-  #print_center -verm "ERROR de enlace VPS<-->GENERADOR"
   print_center -verm "Falla aldescargar $1"
-  print_center -ama "Reportar con el administrador @Rufu99"
+  print_center -ama "Reportar con el administrador"
   msg -bar3
   [[ -d ${SCPinstal} ]] && rm -rf ${SCPinstal}
   exit
@@ -146,32 +143,31 @@ error_fun(){
 
 post_reboot(){
   echo 'clear; sleep 2; /etc/ADMRufu/install.sh --continue' >> /root/.bashrc
-  title "INSTALADOR ADMRufu"
+  title "INSTALADOR FENXRU"
   print_center -ama "La instalacion continuara\ndespues del reinicio!!!"
   msg -bar
 }
 
 install_start(){
-  title "INSTALADOR ADMRufu"
+  title "INSTALADOR FENXRU"
   print_center -ama "A continuacion se actualizaran los paquetes\ndel systema. Esto podria tomar tiempo,\ny requerir algunas preguntas\npropias de las actualizaciones."
   msg -bar3
   read -rp "$(msg -verm2 " Desea continuar? [S/N]:") " -e -i S opcion
   [[ "$opcion" != @(s|S) ]] && stop_install
-  title "INSTALADOR ADMRufu"
+  title "INSTALADOR FENXRU"
   print_center -ama 'Esto modificara la hora y fecha automatica\nsegun la Zona horaria establecida.'
   msg -bar
   read -rp "$(msg -ama " Modificar la zona horaria? [S/N]:") " -e -i N opcion
-  [[ "$opcion" != @(n|N) ]] && source <(curl -sSL "https://raw.githubusercontent.com/rudi9999/ADMRufu/main/online/timeZone.sh")
-  title "INSTALADOR ADMRufu"
+  [[ "$opcion" != @(n|N) ]] && source <(curl -sSL "https://raw.githubusercontent.com/MARCELOSALVATIERRA926/FENXRU/main/online/timeZone.sh")
+  title "INSTALADOR FENXRU"
   repo_install
   mysis=$(echo "$VERSION_ID"|cut -d '.' -f1)
-  #[[ ! $mysis = '22' ]] && add-apt-repository -y ppa:ondrej/php &>/dev/null
   apt update -y; apt upgrade -y
   [[ "$VERSION_ID" = '9' ]] && source <(curl -sL https://deb.nodesource.com/setup_10.x)
 }
 
 install_continue(){
-  title "INSTALADOR ADMRufu"
+  title "INSTALADOR FENXRU"
   print_center -ama "$PRETTY_NAME"
   print_center -verd "INSTALANDO DEPENDENCIAS"
   msg -bar3
@@ -204,7 +200,7 @@ do
   esac
 done
 
-title "INSTALADOR ADMRufu"
+title "INSTALADOR FENXRU"
 fun_ip
 
 msg -ne " Verificando Datos: "
@@ -243,21 +239,20 @@ wireguard.sh
 ws-cdn.sh
 WS-Proxy.js'
 
-lisArq="https://raw.githubusercontent.com/rudi9999/ADMRufu/refs/heads/main/old"
+lisArq="https://raw.githubusercontent.com/MARCELOSALVATIERRA926/FENXRU/main/old"
 
-ver=$(curl -sSL "https://raw.githubusercontent.com/rudi9999/ADMRufu/main/vercion")
+ver=$(curl -sSL "https://raw.githubusercontent.com/MARCELOSALVATIERRA926/FENXRU/main/vercion")
 echo "$ver" > ${ADMRufu}/vercion
 echo -e "Idioma=es_ES.utf8\nRutaLocales=locale" > ${ADMRufu}/lang.ini
 
-title -ama '[Proyect by @Rufu99]'
-print_center -ama 'INSTALANDO SCRIPT ADMRufu'
+title -ama '[Proyecto FENXRU]'
+print_center -ama 'INSTALANDO SCRIPT FENXRU'
 sleep 2; del 1
 
 [[ ! -d ${SCPinstal} ]] && mkdir ${SCPinstal}
 print_center -ama 'Descarga de archivos.....'
 
 for arqx in $(echo $arch); do
- # wget --no-check-certificate -O ${SCPinstal}/${arqx} ${lisArq}/${arqx} > /dev/null 2>&1 && {
   wget -O ${SCPinstal}/${arqx} ${lisArq}/${arqx} > /dev/null 2>&1 && {
     verificar_arq "${arqx}"
   } || {
@@ -268,7 +263,7 @@ for arqx in $(echo $arch); do
   }
 done
 
-url='https://github.com/rudi9999/ADMRufu/raw/main/Utils'
+url='https://raw.githubusercontent.com/MARCELOSALVATIERRA926/FENXRU/main/Utils'
 
 autoStart="${ADMRufu}/bin" && [[ ! -d $autoStart ]] && mkdir $autoStart
 varEntorno="${ADMRufu}/sbin" && [[ ! -d $varEntorno ]] && mkdir $varEntorno
@@ -290,7 +285,6 @@ wget --no-cache -O ${varEntorno}/dropBear "$url/dropBear/dropBear" &>/dev/null; 
 wget --no-cache -O ${varEntorno}/protocolsUDP "$url/protocolsUDP/protocolsUDP" &>/dev/null;           chmod +x ${varEntorno}/protocolsUDP 
 wget --no-cache -O ${varEntorno}/udprequest   "$url/protocolsUDP/udprequest/udprequest" &>/dev/null;  chmod +x ${varEntorno}/udprequest
 wget --no-cache -O ${varEntorno}/udpcustom    "$url/protocolsUDP/udpcustom/udpcustom" &>/dev/null;    chmod +x ${varEntorno}/udpcustom
-#wget --no-cache -O ${varEntorno}/udp-zivpn    "$url/protocolsUDP/zivpn/udp-zivpn" &>/dev/null;        chmod +x ${varEntorno}/udp-zivpn
 wget --no-cache -O ${varEntorno}/udp-udpmod   "$url/protocolsUDP/udpmod/udp-udpmod" &>/dev/null;      chmod +x ${varEntorno}/udp-udpmod
 wget --no-cache -O ${varEntorno}/Stunnel      "$url/Stunnel/Stunnel" &>/dev/null;                     chmod +x ${varEntorno}/Stunnel
 wget --no-cache -O ${varEntorno}/Slowdns      "$url/SlowDNS/Slowdns" &>/dev/null;                     chmod +x ${varEntorno}/Slowdns
@@ -315,16 +309,12 @@ wget --no-cache -O ${varEntorno}/userTOKEN    "$url/user-managers/userTOKEN/user
 wget --no-cache -O ${autoStart}/limit    "$url/user-managers/limitador/limit" &>/dev/null;   chmod +x ${autoStart}/limit
 ${autoStart}/limit
 
-wget --no-cache -O /etc/ADMRufu/uninstall "https://github.com/rudi9999/ADMRufu/raw/main/uninstall" &>/dev/null; chmod +x /etc/ADMRufu/uninstall
+wget --no-cache -O /etc/ADMRufu/uninstall "https://raw.githubusercontent.com/MARCELOSALVATIERRA926/FENXRU/main/uninstall" &>/dev/null; chmod +x /etc/ADMRufu/uninstall
 
 if [[ -e $autoStart/autoStart ]]; then
   $autoStart/autoStart -e /etc/ADMRufu/autoStart
 fi
 
-#profileDir="/etc/profile.d" && [[ ! -d ${profileDir} ]] && mkdir ${profileDir}
-#echo '#!/bin/bash
-#export PATH="$PATH:/etc/ADMRufu/sbin"' > /etc/profile.d/rufu.sh
-#chmod +x /etc/profile.d/rufu.sh
 rm -rf /etc/profile.d/rufu.sh
 
 sbinList=$(ls ${varEntorno})
@@ -351,7 +341,7 @@ update-locale LANG=en_US.UTF-8 LANGUAGE=en LC_ALL=en_US.UTF-8
 echo -e "LANG=en_US.UTF-8\nLANGUAGE=en\nLC_ALL=en_US.UTF-8" > /etc/default/locale
 [[ ! $(cat /etc/shells|grep "/bin/false") ]] && echo -e "/bin/false" >> /etc/shells
 clear
-title "-- ADMRufu INSTALADO --"
+title "-- FENXRU INSTALADO --"
 
 mv -f ${module} /etc/ADMRufu/module
 time_reboot "10"
